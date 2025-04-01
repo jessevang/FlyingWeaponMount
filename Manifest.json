@@ -1,0 +1,18 @@
+{
+  "Name": "FlyingWeaponMount",
+  "Author": "Darkmushu1",
+  "Version": "1.0.0",
+  "Description": "Walking, Running, naw, lets go with Flying Weapons",
+  "UniqueID": "Darkmushu1.FlyingWeaponMount",
+  "EntryDll": "FlyingWeaponMount.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": ["Nexus:32830"],
+  "Dependencies": [
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ]
+}
+
+
