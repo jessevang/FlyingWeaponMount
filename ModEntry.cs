@@ -29,7 +29,7 @@ namespace FlyingWeaponMount
         public Color weaponColorDown { get; set; } = new Color(255, 255, 255, 100);
         public Color weaponColorRight { get; set; } = new Color(255, 255, 255, 160);
         public Color weaponColorLeft { get; set; } = new Color(255, 255, 255, 160);
-        
+
 
         public List<WeaponSpriteData> weaponSpriteData { get; set; } = new List<WeaponSpriteData>
         {
@@ -149,6 +149,7 @@ namespace FlyingWeaponMount
 }
 public class ModEntry : Mod
 {
+
     public static ITranslationHelper i18n;
     public static ModEntry Instance { get; private set; }
     private ModConfig Config;
@@ -172,13 +173,14 @@ public class ModEntry : Mod
         var harmony = new Harmony(ModManifest.UniqueID);
         harmony.PatchAll();
 
-
         helper.Events.Input.ButtonPressed += OnButtonPressed;
         helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         helper.Events.Display.RenderedWorld += OnRenderedWorld;
         helper.Events.GameLoop.GameLaunched += GameLoop_GameLaunched;
 
     }
+
+
 
 
 
@@ -221,19 +223,32 @@ public class ModEntry : Mod
 
     private void SnapCameraToPlayer()
     {
-        Game1.forceSnapOnNextViewportUpdate = true;
+        Rectangle clamp = Game1.viewportClampArea;
+        if (clamp == Rectangle.Empty)
+            clamp = new Rectangle(0, 0, Game1.currentLocation.Map.DisplayWidth, Game1.currentLocation.Map.DisplayHeight);
 
-        // Manually snap the camera to the player's standing position
         Point standingPixel = Game1.player.StandingPixel;
+        int camX = standingPixel.X - Game1.viewport.Width / 2;
+        int camY = standingPixel.Y - Game1.viewport.Height / 2;
 
-        Game1.viewport.X = standingPixel.X - Game1.viewport.Width / 2;
-        Game1.viewport.Y = standingPixel.Y - Game1.viewport.Height / 2;
+        int maxX = clamp.Width - Game1.viewport.Width;
+        int maxY = clamp.Height - Game1.viewport.Height;
 
-        // Clamp to the map bounds
-        Game1.viewport.X = Math.Clamp(Game1.viewport.X, 0, Game1.currentLocation.Map.DisplayWidth - Game1.viewport.Width);
-        Game1.viewport.Y = Math.Clamp(Game1.viewport.Y, 0, Game1.currentLocation.Map.DisplayHeight - Game1.viewport.Height);
+        // If map is smaller than viewport, center the view
+        if (maxX < 0)
+            camX = clamp.X + (clamp.Width - Game1.viewport.Width) / 2;
+        else
+            camX = Math.Clamp(camX, clamp.X, clamp.X + maxX);
+
+        if (maxY < 0)
+            camY = clamp.Y + (clamp.Height - Game1.viewport.Height) / 2;
+        else
+            camY = Math.Clamp(camY, clamp.Y, clamp.Y + maxY);
+
+        Game1.viewport.X = camX;
+        Game1.viewport.Y = camY;
+        Game1.forceSnapOnNextViewportUpdate = true;
     }
-
 
 
 
