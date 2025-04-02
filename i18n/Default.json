@@ -13,7 +13,8 @@
   "movement.hover_height.tooltip": "Distance (in pixels) the sword and farmer hover above the ground.",
   "movement.farmer_above_weapon.name": "Hover Above Weapon",
   "movement.farmer_above_weapon.tooltip": "Distance (in pixels) the farmer floats above the weapon.",
-
+  "flyanywhere.name": "Fly Anywhere?",
+  "flyanywhere.tooltip": "If turned on no collision is check and player can fly across lakes and river and off screen. Warning: If player runs out of stamina player can get stuck.",
 
   "ModImagePreviewer.Cs-.back": "Back",
   "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "Failed to load image: ",

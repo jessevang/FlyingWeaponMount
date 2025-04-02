@@ -24,6 +24,7 @@ namespace FlyingWeaponMount
         public float StaminaDrainPerTenthSecond { get; set; } = 0.2f;
         public float HoverHeightOffGround { get; set; } = -50.0f;
         public float FarmerHoverAboveWeapon { get; set; } = 40.0f;
+        public Boolean FlyAnywhere { get; set; } = false;
         public Color weaponColorUp { get; set; } = new Color(255, 255, 255, 80);
         public Color weaponColorDown { get; set; } = new Color(255, 255, 255, 100);
         public Color weaponColorRight { get; set; } = new Color(255, 255, 255, 160);
@@ -257,7 +258,7 @@ public class ModEntry : Mod
             Rectangle hitbox = Game1.player.GetBoundingBox();
             hitbox.Offset(0, (int)move.Y);
 
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
+            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player)|| Config.FlyAnywhere == true)
             {
                 isWeaponFlying = true;
     
@@ -276,7 +277,7 @@ public class ModEntry : Mod
             Rectangle hitbox = Game1.player.GetBoundingBox();
             hitbox.Offset((int)move.X, 0);
 
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
+            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player) || Config.FlyAnywhere == true)
             {
 
                 isWeaponFlying = true;
@@ -296,7 +297,7 @@ public class ModEntry : Mod
             Rectangle hitbox = Game1.player.GetBoundingBox();
             hitbox.Offset(0, (int)move.Y);
 
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
+            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player) || Config.FlyAnywhere == true)
             {
 
                 isWeaponFlying = true;
@@ -316,7 +317,7 @@ public class ModEntry : Mod
             Rectangle hitbox = Game1.player.GetBoundingBox();
             hitbox.Offset((int)move.X, 0);
 
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
+            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player) || Config.FlyAnywhere == true)
             {
                 isWeaponFlying = true;
 
@@ -517,7 +518,7 @@ public class ModEntry : Mod
             name: () => i18n.Get("movement.speed_multiplier.name"),
             tooltip: () => i18n.Get("movement.speed_multiplier.tooltip"),
             min: 0.0f,
-            max: 5.0f,
+            max: 20.0f,
             interval: 0.01f
         );
 
@@ -530,6 +531,15 @@ public class ModEntry : Mod
             min: 0.0f,
             max: 3.0f,
             interval: 0.01f
+        );
+
+        gmcm.AddBoolOption(
+            mod: ModManifest,
+            getValue: () => Config.FlyAnywhere, 
+            setValue: value => Config.FlyAnywhere = value,
+            name: () => i18n.Get("flyanywhere.name"),
+            tooltip:() =>i18n.Get("flyanywhere.tooltip"),
+            null
         );
 
         gmcm.AddNumberOption(
