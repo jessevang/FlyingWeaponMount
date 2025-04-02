@@ -159,7 +159,8 @@ public class ModEntry : Mod
     private Vector2 offset = Vector2.Zero;
     private Color weaponColor = new Color(255, 255, 255, 160);
     private bool isWeaponFlying = false;
-
+    private Vector2? initialCameraOffset = null;
+    private Vector2? playerCenter = null;
 
     public override void Entry(IModHelper helper)
     {
@@ -194,13 +195,16 @@ public class ModEntry : Mod
         if (e.Button == SButton.LeftShift)
         {
             if (IsMovementKeyDown())
-                return; // Walking (vanilla)
+                return; 
 
             // Only toggle between Run and FlyingWeapon
             if (currentMode == MovementMode.Run)
             {
                 if (Game1.player.CurrentItem is MeleeWeapon)
+                {
                     currentMode = MovementMode.FlyingWeapon;
+                    SnapCameraToPlayer(); 
+                }
 
                 else
                     Game1.addHUDMessage(new HUDMessage(i18n.Get("HUDMessage-MustUseMeleeWeapon"), HUDMessage.error_type));
@@ -212,6 +216,28 @@ public class ModEntry : Mod
             }
         }
     }
+
+
+    private void SnapCameraToPlayer()
+    {
+        Game1.forceSnapOnNextViewportUpdate = true;
+
+        // Manually snap the camera to the player's standing position
+        Point standingPixel = Game1.player.StandingPixel;
+
+        Game1.viewport.X = standingPixel.X - Game1.viewport.Width / 2;
+        Game1.viewport.Y = standingPixel.Y - Game1.viewport.Height / 2;
+
+        // Clamp to the map bounds
+        Game1.viewport.X = Math.Clamp(Game1.viewport.X, 0, Game1.currentLocation.Map.DisplayWidth - Game1.viewport.Width);
+        Game1.viewport.Y = Math.Clamp(Game1.viewport.Y, 0, Game1.currentLocation.Map.DisplayHeight - Game1.viewport.Height);
+    }
+
+
+
+
+
+
 
     private void UpdateFacingFromInput()
     {
@@ -234,6 +260,7 @@ public class ModEntry : Mod
             if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
             {
                 isWeaponFlying = true;
+    
                 Game1.player.position.Set(newPos);
             }
         }
@@ -251,7 +278,9 @@ public class ModEntry : Mod
 
             if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
             {
+
                 isWeaponFlying = true;
+
                 Game1.player.position.Set(newPos);
             }
         }
@@ -269,7 +298,9 @@ public class ModEntry : Mod
 
             if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
             {
+
                 isWeaponFlying = true;
+
                 Game1.player.position.Set(newPos);
             }
         }
@@ -288,6 +319,7 @@ public class ModEntry : Mod
             if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player))
             {
                 isWeaponFlying = true;
+
                 Game1.player.position.Set(newPos);
 
             }
@@ -299,7 +331,9 @@ public class ModEntry : Mod
     {
         Game1.player.canMove = true;
         Game1.player.yOffset = 0f;
+        initialCameraOffset = null;
         currentMode = MovementMode.Run;
+   
     }
 
     private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
@@ -312,6 +346,8 @@ public class ModEntry : Mod
         {
             return;
         }
+        if (Game1.currentLocation.currentEvent != null || Game1.eventUp || Game1.fadeToBlack)
+            return; // Don't update flying or camera right now
 
 
         if (Game1.player.CurrentItem is not MeleeWeapon)
@@ -333,7 +369,7 @@ public class ModEntry : Mod
         Game1.player.Halt();
         hoverTick++;
         hoverOffset = Config.HoverHeightOffGround + (float)Math.Sin(hoverTick / 10f) * 4f; //sets hover height, adjust first number for height
-
+        SnapCameraToPlayer();
 
 
 
