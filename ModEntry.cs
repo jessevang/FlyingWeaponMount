@@ -207,6 +207,7 @@ public class ModEntry : Mod
             }
             else
             {
+                stopSwordFlyingAndReset();
                 currentMode = MovementMode.Run;
             }
         }
@@ -309,7 +310,6 @@ public class ModEntry : Mod
 
         if (currentMode != MovementMode.FlyingWeapon)
         {
-            stopSwordFlyingAndReset();
             return;
         }
 
