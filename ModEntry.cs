@@ -12,6 +12,7 @@ using SpinningWeaponAndToolMod;
 using HarmonyLib;
 using GenericModConfigMenu;
 using System.Globalization;
+using StardewValley.Menus;
 
 
 namespace FlyingWeaponMount
@@ -197,9 +198,10 @@ public class ModEntry : Mod
 
         if (e.Button == Config.WeaponFlyModeOnOffToggleHotkey)
         {
-            if (IsMovementKeyDown())
-                return; 
 
+            if (IsMovementKeyDown())
+                return;
+            
             // Only toggle between Run and FlyingWeapon
             if (currentMode == MovementMode.Run)
             {
@@ -380,7 +382,19 @@ public class ModEntry : Mod
             return;
         }
 
-        UpdateFacingFromInput();
+        if (Game1.activeClickableMenu != null)  //Need to test to not fly around when menu is open, need to do the same
+        {
+
+        }
+        else if (Game1.activeClickableMenu is DialogueBox)
+        {
+
+        }
+        else
+        {
+            UpdateFacingFromInput();
+        }
+            
         // Hover effect using sine wave
         Game1.player.Halt();
         hoverTick++;
