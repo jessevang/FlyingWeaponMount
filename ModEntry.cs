@@ -195,7 +195,7 @@ public class ModEntry : Mod
         }
 
 
-        if (e.Button == SButton.LeftShift)
+        if (e.Button == Config.WeaponFlyModeOnOffToggleHotkey)
         {
             if (IsMovementKeyDown())
                 return; 
@@ -261,7 +261,7 @@ public class ModEntry : Mod
         float dt = (float)Game1.currentGameTime.ElapsedGameTime.TotalMilliseconds / 16.67f;
 
 
-        if (Helper.Input.IsDown(SButton.W) || Helper.Input.IsDown(SButton.Up))  // UP
+        if (Helper.Input.IsDown(SButton.W) || Helper.Input.IsDown(SButton.LeftThumbstickUp))  // UP
         {
             FacingDirection = -MathF.PI / 4f;
             offset = new Vector2(28, 42);
@@ -280,7 +280,7 @@ public class ModEntry : Mod
                 Game1.player.position.Set(newPos);
             }
         }
-        else if (Helper.Input.IsDown(SButton.D) || Helper.Input.IsDown(SButton.Right))  // RIGHT
+        else if (Helper.Input.IsDown(SButton.D) || Helper.Input.IsDown(SButton.LeftThumbstickRight))  // RIGHT
         {
             FacingDirection = MathF.PI / 4f;
             offset = new Vector2(-32, 16);
@@ -300,7 +300,7 @@ public class ModEntry : Mod
                 Game1.player.position.Set(newPos);
             }
         }
-        else if (Helper.Input.IsDown(SButton.S) || Helper.Input.IsDown(SButton.Down))  // DOWN
+        else if (Helper.Input.IsDown(SButton.S) || Helper.Input.IsDown(SButton.LeftThumbstickDown))  // DOWN
         {
             FacingDirection = -5 * MathF.PI / 4f;
             offset = new Vector2(32, -32);   ///32,-32
@@ -320,7 +320,7 @@ public class ModEntry : Mod
                 Game1.player.position.Set(newPos);
             }
         }
-        else if (Helper.Input.IsDown(SButton.A) || Helper.Input.IsDown(SButton.Left))  // LEFT
+        else if (Helper.Input.IsDown(SButton.A) || Helper.Input.IsDown(SButton.LeftThumbstickLeft))  // LEFT
         {
             FacingDirection = -3 * MathF.PI / 4f;
             offset = new Vector2(80, 16);
@@ -395,6 +395,7 @@ public class ModEntry : Mod
             if (Game1.player.Stamina <= 0)
             {
                 currentMode = MovementMode.Run;
+                stopSwordFlyingAndReset() ; 
                 Game1.addHUDMessage(new HUDMessage(i18n.Get("HUDMessage-TooExhausted"), HUDMessage.error_type));
                 return;
 
