@@ -1,0 +1,24 @@
+{
+  "hotkeys.toggle_mount.name": "Alternar Montaria de Arma",
+  "hotkeys.toggle_mount.tooltip": "Pressionar este botão irá montar ou desmontar sua arma.",
+  "hotkeys.image_menu.name": "Selecionar Imagem de Mod",
+  "hotkeys.image_menu.tooltip": "Abre um menu para escolher uma imagem de arma modificada para usar como montaria.",
+  "movement.speed_multiplier.name": "Multiplicador de Velocidade de Movimento",
+  "movement.speed_multiplier.tooltip": "A velocidade da sua montaria na espada = velocidade normal × este valor.",
+  "movement.stamina_drain.name": "Dreno de Energia",
+  "movement.stamina_drain.tooltip": "Quantidade de energia drenada a cada 1/10 de segundo durante o voo.",
+  "movement.hover_height.name": "Altura de Flutuação",
+  "movement.hover_height.tooltip": "Distância (em pixels) que a espada e o fazendeiro flutuam acima do chão.",
+  "movement.farmer_above_weapon.name": "Flutuar Acima da Arma",
+  "movement.farmer_above_weapon.tooltip": "Distância (em pixels) que o fazendeiro flutua acima da arma.",
+  "flyanywhere.name": "Voar em Qualquer Lugar?",
+  "flyanywhere.tooltip": "Se ativado, não haverá verificação de colisão e o jogador poderá voar sobre lagos, rios e sair da tela. Aviso: Se o jogador ficar sem energia, pode ficar preso.",
+
+  "ModImagePreviewer.Cs-.back": "Voltar",
+  "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "Falha ao carregar imagem: ",
+  "ModImagePreviewer.Cs-AddHudMessage.NoTileSelected": "Nenhum bloco selecionado",
+  "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Sprite salvo e imagem registrada",
+  "ModEntry.Cs-showRedMessage.SiloAreFull": "Os silos estão cheios. Não é possível armazenar mais feno.",
+  "HUDMessage-MustUseMeleeWeapon": "Você precisa estar segurando uma arma corpo a corpo para voar!",
+  "HUDMessage-TooExhausted": "Você está exausto demais para voar!"
+}

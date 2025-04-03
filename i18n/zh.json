@@ -1,0 +1,24 @@
+{
+  "hotkeys.toggle_mount.name": "切换武器骑乘",
+  "hotkeys.toggle_mount.tooltip": "按下此按钮将骑上或解除骑乘你的武器。",
+  "hotkeys.image_menu.name": "选择模组图片菜单",
+  "hotkeys.image_menu.tooltip": "打开一个菜单，选择一个模组武器图像用作骑乘。",
+  "movement.speed_multiplier.name": "移动速度倍率",
+  "movement.speed_multiplier.tooltip": "你的剑骑乘速度 = 正常速度 × 此数值。",
+  "movement.stamina_drain.name": "精力消耗",
+  "movement.stamina_drain.tooltip": "每1/10秒飞行时消耗的精力值。",
+  "movement.hover_height.name": "悬浮高度",
+  "movement.hover_height.tooltip": "剑和农夫离地悬浮的距离（像素）。",
+  "movement.farmer_above_weapon.name": "悬浮在武器上方",
+  "movement.farmer_above_weapon.tooltip": "农夫在武器上方悬浮的距离（像素）。",
+  "flyanywhere.name": "可以随处飞行？",
+  "flyanywhere.tooltip": "开启后将不检查碰撞，玩家可以飞越湖泊、河流并离开画面。警告：如果玩家精力耗尽，可能会卡住。",
+
+  "ModImagePreviewer.Cs-.back": "返回",
+  "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "加载图片失败：",
+  "ModImagePreviewer.Cs-AddHudMessage.NoTileSelected": "未选择图块",
+  "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "图像已保存并注册",
+  "ModEntry.Cs-showRedMessage.SiloAreFull": "料仓已满，无法存储更多干草。",
+  "HUDMessage-MustUseMeleeWeapon": "你必须手持近战武器才能飞行！",
+  "HUDMessage-TooExhausted": "你太累了，无法飞行！"
+}

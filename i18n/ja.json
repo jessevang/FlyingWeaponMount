@@ -1,0 +1,24 @@
+{
+  "hotkeys.toggle_mount.name": "武器マウントの切り替え",
+  "hotkeys.toggle_mount.tooltip": "このボタンを押すと、武器に乗る／降りることができます。",
+  "hotkeys.image_menu.name": "MOD画像選択メニュー",
+  "hotkeys.image_menu.tooltip": "マウントとして使用するMODの武器画像を選択するメニューを開きます。",
+  "movement.speed_multiplier.name": "移動速度倍率",
+  "movement.speed_multiplier.tooltip": "剣マウントの速度 ＝ 通常の速度 × この値。",
+  "movement.stamina_drain.name": "スタミナ消費量",
+  "movement.stamina_drain.tooltip": "飛行中、0.1秒ごとに消費されるスタミナの量です。",
+  "movement.hover_height.name": "ホバリングの高さ",
+  "movement.hover_height.tooltip": "剣とプレイヤーが地面から浮かぶ距離（ピクセル単位）。",
+  "movement.farmer_above_weapon.name": "武器の上にホバリング",
+  "movement.farmer_above_weapon.tooltip": "プレイヤーが武器の上に浮かぶ距離（ピクセル単位）。",
+  "flyanywhere.name": "どこでも飛行可能？",
+  "flyanywhere.tooltip": "オンにすると、当たり判定を無視して湖や川、画面外も飛行できます。警告：スタミナが切れると動けなくなる可能性があります。",
+
+  "ModImagePreviewer.Cs-.back": "戻る",
+  "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "画像の読み込みに失敗しました：",
+  "ModImagePreviewer.Cs-AddHudMessage.NoTileSelected": "タイルが選択されていません",
+  "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "スプライトが保存され、画像が登録されました",
+  "ModEntry.Cs-showRedMessage.SiloAreFull": "サイロが満杯です。これ以上干し草を保存できません。",
+  "HUDMessage-MustUseMeleeWeapon": "飛行するには近接武器を装備してください！",
+  "HUDMessage-TooExhausted": "疲れすぎて飛べません！"
+}

@@ -1,0 +1,24 @@
+{
+  "hotkeys.toggle_mount.name": "Attiva/Disattiva Cavalcatura Arma",
+  "hotkeys.toggle_mount.tooltip": "Premi questo pulsante per salire o scendere dalla tua arma.",
+  "hotkeys.image_menu.name": "Menu Selezione Immagine Mod",
+  "hotkeys.image_menu.tooltip": "Apri un menu per scegliere un'immagine di arma moddata da usare come cavalcatura.",
+  "movement.speed_multiplier.name": "Moltiplicatore Velocità di Movimento",
+  "movement.speed_multiplier.tooltip": "Velocità sulla spada = velocità normale × questo valore.",
+  "movement.stamina_drain.name": "Consumo di Energia",
+  "movement.stamina_drain.tooltip": "Quantità di energia consumata ogni 1/10 di secondo durante il volo.",
+  "movement.hover_height.name": "Altezza di Sospensione",
+  "movement.hover_height.tooltip": "Distanza (in pixel) a cui la spada e il contadino fluttuano sopra il suolo.",
+  "movement.farmer_above_weapon.name": "Fluttua Sopra l'Arma",
+  "movement.farmer_above_weapon.tooltip": "Distanza (in pixel) a cui il contadino fluttua sopra l'arma.",
+  "flyanywhere.name": "Volare Ovunque?",
+  "flyanywhere.tooltip": "Se attivo, non viene controllata la collisione e il giocatore può volare sopra laghi, fiumi e fuori dallo schermo. Attenzione: se l'energia finisce, il giocatore potrebbe rimanere bloccato.",
+
+  "ModImagePreviewer.Cs-.back": "Indietro",
+  "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "Impossibile caricare l'immagine: ",
+  "ModImagePreviewer.Cs-AddHudMessage.NoTileSelected": "Nessuna tile selezionata",
+  "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Sprite salvato e immagine registrata",
+  "ModEntry.Cs-showRedMessage.SiloAreFull": "I silos sono pieni. Non è possibile conservare altro fieno.",
+  "HUDMessage-MustUseMeleeWeapon": "Devi tenere un'arma da mischia per volare!",
+  "HUDMessage-TooExhausted": "Sei troppo stanco per volare!"
+}

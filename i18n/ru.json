@@ -1,0 +1,24 @@
+{
+  "hotkeys.toggle_mount.name": "Вкл/Выкл Полёт на Оружии",
+  "hotkeys.toggle_mount.tooltip": "Нажмите эту кнопку, чтобы оседлать или слезть с оружия.",
+  "hotkeys.image_menu.name": "Меню Выбора Изображения Мода",
+  "hotkeys.image_menu.tooltip": "Открывает меню выбора изображения модифицированного оружия для полёта.",
+  "movement.speed_multiplier.name": "Коэффициент Скорости Движения",
+  "movement.speed_multiplier.tooltip": "Скорость полёта на мече = обычная скорость × это значение.",
+  "movement.stamina_drain.name": "Потеря Выносливости",
+  "movement.stamina_drain.tooltip": "Количество выносливости, теряемое каждые 0.1 секунды во время полёта.",
+  "movement.hover_height.name": "Высота Парения",
+  "movement.hover_height.tooltip": "Расстояние (в пикселях) между мечом и землёй.",
+  "movement.farmer_above_weapon.name": "Фермер Над Оружием",
+  "movement.farmer_above_weapon.tooltip": "Расстояние (в пикселях), на котором фермер парит над оружием.",
+  "flyanywhere.name": "Летать Где Угодно?",
+  "flyanywhere.tooltip": "Если включено, столкновения не проверяются, и игрок может летать над озёрами, реками и за пределами экрана. Внимание: если выносливость закончится, игрок может застрять.",
+
+  "ModImagePreviewer.Cs-.back": "Назад",
+  "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "Не удалось загрузить изображение: ",
+  "ModImagePreviewer.Cs-AddHudMessage.NoTileSelected": "Тайл не выбран",
+  "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Спрайт сохранён, изображение зарегистрировано",
+  "ModEntry.Cs-showRedMessage.SiloAreFull": "Силос заполнен. Нельзя хранить больше сена.",
+  "HUDMessage-MustUseMeleeWeapon": "Чтобы летать, нужно держать оружие ближнего боя!",
+  "HUDMessage-TooExhausted": "Вы слишком устали, чтобы летать!"
+}
