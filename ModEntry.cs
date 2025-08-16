@@ -19,10 +19,11 @@ namespace FlyingWeaponMount
 {
     public class ModConfig
     {
-        public SButton WeaponFlyModeOnOffToggleHotkey = SButton.LeftShift;
+        public string Mode { get; set; } = "UnifiedExperience";
+        public SButton WeaponFlyModeOnOffToggleHotkey = SButton.LeftShift; 
         public SButton LoadOptionsToPickModdedWeaponImage = SButton.F7;
-        public float MovementSpeedMultiplier { get; set; } = 1.0f;
-        public float StaminaDrainPerTenthSecond { get; set; } = 0.2f;
+        public float MovementSpeedMultiplier { get; set; } = 1.5f;
+        public float StaminaDrainPerTenthSecond { get; set; } = 1.0f;
         public float HoverHeightOffGround { get; set; } = -50.0f;
         public float FarmerHoverAboveWeapon { get; set; } = 40.0f;
         public Boolean FlyAnywhere { get; set; } = false;
@@ -164,7 +165,7 @@ public class ModEntry : Mod
     private bool isWeaponFlying = false;
     private Vector2? initialCameraOffset = null;
     private Vector2? playerCenter = null;
-
+    private UnifiedExperienceSystem.IUnifiedExperienceAPI? uesApi;
     public override void Entry(IModHelper helper)
     {
         Instance = this;
@@ -178,6 +179,7 @@ public class ModEntry : Mod
         helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         helper.Events.Display.RenderedWorld += OnRenderedWorld;
         helper.Events.GameLoop.GameLaunched += GameLoop_GameLaunched;
+
 
     }
 
@@ -198,6 +200,35 @@ public class ModEntry : Mod
 
         if (e.Button == Config.WeaponFlyModeOnOffToggleHotkey)
         {
+
+            if (Config.Mode.Equals("UnifiedExperience") )
+            {
+                if (uesApi == null)
+                    return;
+
+                /*if (uesApi != null)
+                {
+                    uesApi.GrantAbilityExp(this.ModManifest.UniqueID, "FlyingWeaponMount", 1000);
+                }
+                */
+                int level = uesApi.GetAbilityLevel(this.ModManifest.UniqueID, "FlyingWeaponMount");
+                if (level <= 0) return;
+
+                Config.StaminaDrainPerTenthSecond = 0.2f - (0.02f * level);
+                Config.MovementSpeedMultiplier = 1.5f + (0.10f * level);
+
+                Monitor.Log($"[UES] FlyingWeaponMount scaled: Level {level}, " +
+                            $"StaminaDrain={Config.StaminaDrainPerTenthSecond}, Speed={Config.MovementSpeedMultiplier}",
+                            LogLevel.Debug);
+
+
+
+            }
+
+
+
+
+
 
             if (IsMovementKeyDown())
                 return;
@@ -515,13 +546,131 @@ public class ModEntry : Mod
     private void GameLoop_GameLaunched(object? sender, GameLaunchedEventArgs e)
     {
 
-        // Uses Generic Mod Config Menu API to build a config UI.
+        registerGMCM();
+        registerUES();
+
+
+
+    }
+
+
+    private void registerUES()
+    {
+        uesApi = Helper.ModRegistry.GetApi<UnifiedExperienceSystem.IUnifiedExperienceAPI>("Darkmushu.UnifiedExperienceSystem");
+
+        if (uesApi == null)
+        {
+            return;
+        }
+
+    
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "FlyingWeaponMount",
+            displayName: "Flying Weapon Mount",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind:"linear",
+            new Dictionary<string, object> {
+                { "xpPerLevel", 1000 } 
+            },
+            maxLevel: 10
+        );
+
+        /*
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test1",
+            displayName: "test1",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test2",
+            displayName: "test2",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                        { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test3",
+            displayName: "test3",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                                { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+
+
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test4",
+            displayName: "test4",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                                { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test5",
+            displayName: "test51",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                                { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test6",
+            displayName: "test6",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                                { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+
+        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+            abilityId: "test7",
+            displayName: "test7",
+            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            curveKind: "linear",
+            new Dictionary<string, object> {
+                                { "xpPerLevel", 1000 }
+            },
+            maxLevel: 10
+        );
+        */
+    }
+
+    private void registerGMCM()
+    {
         var gmcm = ModEntry.Instance.Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
         if (gmcm == null)
             return;
 
         // Register the mod.
         gmcm.Register(ModEntry.Instance.ModManifest, () => Config = new ModConfig(), () => ModEntry.Instance.Helper.WriteConfig(Config));
+
+        gmcm.AddTextOption(
+            mod: ModManifest,
+            name: () => "Game Mode",
+            tooltip: () => "Standalone = Mod works by self and doesn't use UnifiedExperienceSystem for Leveling, UnifiedExperience = use Unified Experience System and requires leveling to use this mod's ability.",
+            getValue: () => Config.Mode,
+            setValue: value => Config.Mode = value,
+            allowedValues: new[] { "Standalone", "UnifiedExperience" }
+        );
 
 
         gmcm.AddKeybind(
@@ -535,7 +684,7 @@ public class ModEntry : Mod
         gmcm.AddKeybind(
             ModManifest,
             name: () => i18n.Get("hotkeys.image_menu.name"),
-            tooltip: () =>  i18n.Get("hotkeys.image_menu.tooltip"),
+            tooltip: () => i18n.Get("hotkeys.image_menu.tooltip"),
             getValue: () => Config.LoadOptionsToPickModdedWeaponImage,
             setValue: value => Config.LoadOptionsToPickModdedWeaponImage = value
         );
@@ -565,10 +714,10 @@ public class ModEntry : Mod
 
         gmcm.AddBoolOption(
             mod: ModManifest,
-            getValue: () => Config.FlyAnywhere, 
+            getValue: () => Config.FlyAnywhere,
             setValue: value => Config.FlyAnywhere = value,
             name: () => i18n.Get("flyanywhere.name"),
-            tooltip:() =>i18n.Get("flyanywhere.tooltip"),
+            tooltip: () => i18n.Get("flyanywhere.tooltip"),
             null
         );
 
@@ -592,8 +741,6 @@ public class ModEntry : Mod
             max: 200.0f,
             interval: 1.0f
         );
-
-
     }
 }
 

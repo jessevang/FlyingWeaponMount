@@ -11,7 +11,12 @@
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",
       "IsRequired": false
+    },
+    {
+      "UniqueID": "Darkmushu1.UnifiedExperienceSystem",
+      "IsRequired": false
     }
+
   ]
 }
 
