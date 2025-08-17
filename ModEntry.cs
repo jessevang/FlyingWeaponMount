@@ -23,12 +23,12 @@ namespace FlyingWeaponMount
 
         public KeybindList WeaponFlyModeOnOffToggleHotkey { get; set; } = new(
             new Keybind(SButton.LeftShift),
-            new Keybind(SButton.LeftShoulder, SButton.RightShoulder, SButton.Down)
+            new Keybind(SButton.LeftShoulder, SButton.RightShoulder, SButton.DPadDown)
         );
 
         public KeybindList LoadOptionsToPickModdedWeaponImage { get; set; } = new(
             new Keybind(SButton.F7),
-            new Keybind(SButton.LeftShoulder, SButton.RightShoulder, SButton.Up)
+            new Keybind(SButton.LeftShoulder, SButton.RightShoulder, SButton.DPadUp)
         );
 
         public float MovementSpeedMultiplier { get; set; } = 1.5f;
@@ -219,7 +219,7 @@ public class ModEntry : Mod
                 if (level <= 0) return;
 
                 Config.StaminaDrainPerTenthSecond = 0.2f - (0.02f * level);
-                Config.MovementSpeedMultiplier = 1.5f + (0.10f * level);
+                Config.MovementSpeedMultiplier = 1.5f + (0.15f * level);
 
                 
                 //Monitor.Log($"[UES] FlyingWeaponMount scaled: Level {level}, " + $"StaminaDrain={Config.StaminaDrainPerTenthSecond}, Speed={Config.MovementSpeedMultiplier}", LogLevel.Debug);
@@ -566,11 +566,11 @@ public class ModEntry : Mod
             return;
         }
 
-    
+
         uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
             abilityId: "FlyingWeaponMount",
-            displayName: "Flying Weapon Mount",
-            description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
+            displayName: i18n.Get("ability.flyingweaponmount.name"),
+            description: i18n.Get("ability.flyingweaponmount.desc"),
             curveKind:"linear",
             new Dictionary<string, object> {
                 { "xpPerLevel", 1000 } 
@@ -578,25 +578,26 @@ public class ModEntry : Mod
             maxLevel: 10
         );
 
-        
+        /*
         uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
             abilityId: "test1",
-            displayName: "test1",
+            displayName: "test1-StepExperienceBase400Step100",
             description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
-            curveKind: "linear",
+            curveKind: "step",
             new Dictionary<string, object> {
-                { "xpPerLevel", 1000 }
+                { "base", 400 },
+                { "step", 100 }
             },
             maxLevel: 10
         );
 
         uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
             abilityId: "test2",
-            displayName: "test2",
+            displayName: "test2TableXP",
             description: "Level 1 Unlocks Flying Using your Weapon by Pressing Shift Key. Every additional Level increases Flying move Speed and reduce stamina cost. \n\n 1k XP Per Level",
-            curveKind: "linear",
+            curveKind: "table",
             new Dictionary<string, object> {
-                        { "xpPerLevel", 1000 }
+                        { "levels", new int[] { 100, 200, 300, 500, 600, 800, 1000, 1100, 1200, 1500 } }
             },
             maxLevel: 10
         );
@@ -654,6 +655,7 @@ public class ModEntry : Mod
             },
             maxLevel: 10
         );
+        */
         
     }
 

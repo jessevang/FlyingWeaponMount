@@ -23,5 +23,9 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Sprite salvato e immagine registrata",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "I silos sono pieni. Non è possibile conservare altro fieno.",
   "HUDMessage-MustUseMeleeWeapon": "Devi tenere un'arma da mischia per volare!",
-  "HUDMessage-TooExhausted": "Sei troppo stanco per volare!"
+  "HUDMessage-TooExhausted": "Sei troppo stanco per volare!",
+
+  "ability.flyingweaponmount.name": "Monte Arma Volante",
+  "ability.flyingweaponmount.desc": "Livello 1 sblocca il volo con la tua arma premendo Shift o (L + R + DPadGiù). Ogni livello aggiuntivo aumenta la velocità di volo del (10%) e riduce il costo di stamina di un ulteriore (10%)."
+
 }

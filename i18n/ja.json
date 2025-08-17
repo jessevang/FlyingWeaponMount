@@ -23,5 +23,9 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "スプライトが保存され、画像が登録されました",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "サイロが満杯です。これ以上干し草を保存できません。",
   "HUDMessage-MustUseMeleeWeapon": "飛行するには近接武器を装備してください！",
-  "HUDMessage-TooExhausted": "疲れすぎて飛べません！"
+  "HUDMessage-TooExhausted": "疲れすぎて飛べません！",
+
+  "ability.flyingweaponmount.name": "飛行武器マウント",
+  "ability.flyingweaponmount.desc": "レベル1でShiftキー、または(Lショルダー + Rショルダー + DPad下)を押すことで武器に乗って飛行できるようになります。レベルが上がるごとに飛行速度がさらに(10%)増加し、スタミナ消費がさらに(10%)減少します。"
+
 }

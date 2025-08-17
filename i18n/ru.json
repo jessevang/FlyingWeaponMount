@@ -23,5 +23,9 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Спрайт сохранён, изображение зарегистрировано",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "Силос заполнен. Нельзя хранить больше сена.",
   "HUDMessage-MustUseMeleeWeapon": "Чтобы летать, нужно держать оружие ближнего боя!",
-  "HUDMessage-TooExhausted": "Вы слишком устали, чтобы летать!"
+  "HUDMessage-TooExhausted": "Вы слишком устали, чтобы летать!",
+
+  "ability.flyingweaponmount.name": "Летающее оружие",
+  "ability.flyingweaponmount.desc": "На 1-м уровне открывается возможность летать на оружии, нажав Shift или (Левый курок + Правый курок + DPad вниз). Каждый следующий уровень увеличивает скорость полёта на (10%) и дополнительно снижает расход выносливости на (10%)."
+
 }

@@ -23,5 +23,9 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Sprite salvo e imagem registrada",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "Os silos estão cheios. Não é possível armazenar mais feno.",
   "HUDMessage-MustUseMeleeWeapon": "Você precisa estar segurando uma arma corpo a corpo para voar!",
-  "HUDMessage-TooExhausted": "Você está exausto demais para voar!"
+  "HUDMessage-TooExhausted": "Você está exausto demais para voar!",
+
+  "ability.flyingweaponmount.name": "Montaria de Arma Voadora",
+  "ability.flyingweaponmount.desc": "Nível 1 desbloqueia o voo com sua arma ao pressionar Shift ou (Ombro Esquerdo + Ombro Direito + DPadBaixo). Cada nível adicional aumenta a velocidade de voo em (10%) e reduz o custo de energia em mais (10%)."
+
 }

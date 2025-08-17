@@ -23,5 +23,9 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "图像已保存并注册",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "料仓已满，无法存储更多干草。",
   "HUDMessage-MustUseMeleeWeapon": "你必须手持近战武器才能飞行！",
-  "HUDMessage-TooExhausted": "你太累了，无法飞行！"
+  "HUDMessage-TooExhausted": "你太累了，无法飞行！",
+
+  "ability.flyingweaponmount.name": "飞行武器坐骑",
+  "ability.flyingweaponmount.desc": "等级1解锁按下Shift键或(左肩键 + 右肩键 + 下方向键)骑乘武器飞行。每增加一级，飞行速度提高(10%)，体力消耗额外减少(10%)。"
+
 }

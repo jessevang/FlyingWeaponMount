@@ -23,5 +23,9 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "스프라이트가 저장되고 이미지가 등록되었습니다",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "사일로가 가득 찼습니다. 건초를 더 이상 저장할 수 없습니다.",
   "HUDMessage-MustUseMeleeWeapon": "비행하려면 근접 무기를 들고 있어야 합니다!",
-  "HUDMessage-TooExhausted": "너무 지쳐서 비행할 수 없습니다!"
+  "HUDMessage-TooExhausted": "너무 지쳐서 비행할 수 없습니다!",
+
+  "ability.flyingweaponmount.name": "비행 무기 탑승",
+  "ability.flyingweaponmount.desc": "레벨 1에서 Shift 키 또는 (왼쪽 숄더 + 오른쪽 숄더 + DPad 아래)를 눌러 무기에 올라타 비행할 수 있습니다. 레벨이 오를 때마다 비행 속도가 (10%) 증가하고 스태미너 소모가 (10%) 추가로 감소합니다."
+
 }

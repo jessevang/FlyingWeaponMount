@@ -26,7 +26,10 @@
   "ModImagePreviewer.Cs-AddHudMessage.SpriteSaved": "Sprite saved and image registered",
   "ModEntry.Cs-showRedMessage.SiloAreFull": "Silos are full. Cannot store more hay.",
   "HUDMessage-MustUseMeleeWeapon": "You must be holding a melee weapon to fly!",
-  "HUDMessage-TooExhausted": "You're too exhausted to fly!"
+  "HUDMessage-TooExhausted": "You're too exhausted to fly!",
 
+
+  "ability.flyingweaponmount.name": "Flying Weapon Mount",
+  "ability.flyingweaponmount.desc": "Level 1 unlocks flying on your weapon by pressing Shift key or (Left Shoulder + Right Shoulder + DPadDown). Each additional level increases flying move speed by an extra (10%) and reduces stamina cost by an extra (10%)."
 
 }
