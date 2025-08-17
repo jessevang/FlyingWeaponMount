@@ -1,18 +1,18 @@
-﻿using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using StardewValley;
-using StardewValley.Tools;
+﻿using FlyingWeaponMount;
+using GenericModConfigMenu;
+using HarmonyLib;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardewValley.Objects;
-using System;
-
-using FlyingWeaponMount;
 using SpinningWeaponAndToolMod;
-using HarmonyLib;
-using GenericModConfigMenu;
-using System.Globalization;
+using StardewModdingAPI;
+using StardewModdingAPI.Events;
+using StardewModdingAPI.Utilities;
+using StardewValley;
 using StardewValley.Menus;
+using StardewValley.Objects;
+using StardewValley.Tools;
+using System;
+using System.Globalization;
 
 
 namespace FlyingWeaponMount
@@ -20,8 +20,17 @@ namespace FlyingWeaponMount
     public class ModConfig
     {
         public string Mode { get; set; } = "UnifiedExperience";
-        public SButton WeaponFlyModeOnOffToggleHotkey = SButton.LeftShift; 
-        public SButton LoadOptionsToPickModdedWeaponImage = SButton.F7;
+
+        public KeybindList WeaponFlyModeOnOffToggleHotkey { get; set; } = new(
+            new Keybind(SButton.LeftShift),
+            new Keybind(SButton.LeftShoulder, SButton.RightShoulder, SButton.Down)
+        );
+
+        public KeybindList LoadOptionsToPickModdedWeaponImage { get; set; } = new(
+            new Keybind(SButton.F7),
+            new Keybind(SButton.LeftShoulder, SButton.RightShoulder, SButton.Up)
+        );
+
         public float MovementSpeedMultiplier { get; set; } = 1.5f;
         public float StaminaDrainPerTenthSecond { get; set; } = 1.0f;
         public float HoverHeightOffGround { get; set; } = -50.0f;
@@ -192,13 +201,13 @@ public class ModEntry : Mod
         if (!Context.IsPlayerFree || Game1.player == null)
             return;
 
-        if (e.Button == Config.LoadOptionsToPickModdedWeaponImage)
+        if (Config.LoadOptionsToPickModdedWeaponImage.JustPressed())
         {
             Game1.activeClickableMenu = new ModImagePreviewer(Instance, Config, i18n);
         }
 
 
-        if (e.Button == Config.WeaponFlyModeOnOffToggleHotkey)
+        if (Config.WeaponFlyModeOnOffToggleHotkey.JustPressed())
         {
 
             if (Config.Mode.Equals("UnifiedExperience") )
@@ -206,20 +215,14 @@ public class ModEntry : Mod
                 if (uesApi == null)
                     return;
 
-                /*if (uesApi != null)
-                {
-                    uesApi.GrantAbilityExp(this.ModManifest.UniqueID, "FlyingWeaponMount", 1000);
-                }
-                */
                 int level = uesApi.GetAbilityLevel(this.ModManifest.UniqueID, "FlyingWeaponMount");
                 if (level <= 0) return;
 
                 Config.StaminaDrainPerTenthSecond = 0.2f - (0.02f * level);
                 Config.MovementSpeedMultiplier = 1.5f + (0.10f * level);
 
-                Monitor.Log($"[UES] FlyingWeaponMount scaled: Level {level}, " +
-                            $"StaminaDrain={Config.StaminaDrainPerTenthSecond}, Speed={Config.MovementSpeedMultiplier}",
-                            LogLevel.Debug);
+                
+                //Monitor.Log($"[UES] FlyingWeaponMount scaled: Level {level}, " + $"StaminaDrain={Config.StaminaDrainPerTenthSecond}, Speed={Config.MovementSpeedMultiplier}", LogLevel.Debug);
 
 
 
@@ -575,7 +578,7 @@ public class ModEntry : Mod
             maxLevel: 10
         );
 
-        /*
+        
         uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
             abilityId: "test1",
             displayName: "test1",
@@ -651,7 +654,7 @@ public class ModEntry : Mod
             },
             maxLevel: 10
         );
-        */
+        
     }
 
     private void registerGMCM()
@@ -665,29 +668,30 @@ public class ModEntry : Mod
 
         gmcm.AddTextOption(
             mod: ModManifest,
-            name: () => "Game Mode",
-            tooltip: () => "Standalone = Mod works by self and doesn't use UnifiedExperienceSystem for Leveling, UnifiedExperience = use Unified Experience System and requires leveling to use this mod's ability.",
+            name: () => i18n.Get("config.mode.name"),
+            tooltip: () => i18n.Get("config.mode.tooltip"),
             getValue: () => Config.Mode,
             setValue: value => Config.Mode = value,
             allowedValues: new[] { "Standalone", "UnifiedExperience" }
         );
-
-
-        gmcm.AddKeybind(
-            ModManifest,
-            name: () => i18n.Get("hotkeys.toggle_mount.name"),
-            tooltip: () => i18n.Get("hotkeys.toggle_mount.tooltip"),
-            getValue: () => Config.WeaponFlyModeOnOffToggleHotkey,
-            setValue: value => Config.WeaponFlyModeOnOffToggleHotkey = value
+        
+       
+        gmcm.AddKeybindList(
+           mod: ModManifest,
+           name: () => i18n.Get("hotkeys.toggle_mount.name"),
+           tooltip: () => i18n.Get("hotkeys.toggle_mount.tooltip"),
+           getValue: () => Config.WeaponFlyModeOnOffToggleHotkey,
+           setValue: value => Config.WeaponFlyModeOnOffToggleHotkey = value
         );
 
-        gmcm.AddKeybind(
-            ModManifest,
-            name: () => i18n.Get("hotkeys.image_menu.name"),
-            tooltip: () => i18n.Get("hotkeys.image_menu.tooltip"),
-            getValue: () => Config.LoadOptionsToPickModdedWeaponImage,
-            setValue: value => Config.LoadOptionsToPickModdedWeaponImage = value
+        gmcm.AddKeybindList(
+           mod: ModManifest,
+           name: () => i18n.Get("hotkeys.image_menu.name"),
+           tooltip: () => i18n.Get("hotkeys.image_menu.tooltip"),
+           getValue: () => Config.LoadOptionsToPickModdedWeaponImage,
+           setValue: value => Config.LoadOptionsToPickModdedWeaponImage = value
         );
+
 
 
         gmcm.AddNumberOption(

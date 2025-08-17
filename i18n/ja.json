@@ -1,4 +1,7 @@
 {
+  "config.mode.name": "ゲームモード",
+  "config.mode.tooltip": "Standalone = このModは単体で動作し、UnifiedExperienceSystemによるレベル管理は使用しません。UnifiedExperience = Unified Experience System Modが存在する場合、このモードでは飛行に能力レベルが必要になり、飛行速度やスタミナ消費は能力レベルに基づいて上書きされます。",
+
   "hotkeys.toggle_mount.name": "武器マウントの切り替え",
   "hotkeys.toggle_mount.tooltip": "このボタンを押すと、武器に乗る／降りることができます。",
   "hotkeys.image_menu.name": "MOD画像選択メニュー",

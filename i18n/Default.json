@@ -1,4 +1,6 @@
 {
+  "config.mode.name": "Game Mode",
+  "config.mode.tooltip": "Standalone = Mod works by self and doesn't use UnifiedExperienceSystem for Leveling, UnifiedExperience = If Unified Experience System Mod Exists with this mode, Flying will require the ability leveled up, this mode also overrides config options for the fly speed, and stamina drain based on ability level.",
 
 
   "hotkeys.toggle_mount.name": "Toggle Weapon Mount",
@@ -15,6 +17,8 @@
   "movement.farmer_above_weapon.tooltip": "Distance (in pixels) the farmer floats above the weapon.",
   "flyanywhere.name": "Fly Anywhere?",
   "flyanywhere.tooltip": "If turned on no collision is check and player can fly across lakes and river and off screen. Warning: If player runs out of stamina player can get stuck.",
+
+
 
   "ModImagePreviewer.Cs-.back": "Back",
   "ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage": "Failed to load image: ",

@@ -1,4 +1,7 @@
 {
+  "config.mode.name": "Modalità di gioco",
+  "config.mode.tooltip": "Standalone = La mod funziona da sola e non utilizza UnifiedExperienceSystem per il livello. UnifiedExperience = Se la mod Unified Experience System esiste con questa modalità, il volo richiederà l'abilità sbloccata; questa modalità sovrascrive anche le opzioni di configurazione per la velocità di volo e il consumo di stamina in base al livello dell'abilità.",
+
   "hotkeys.toggle_mount.name": "Attiva/Disattiva Cavalcatura Arma",
   "hotkeys.toggle_mount.tooltip": "Premi questo pulsante per salire o scendere dalla tua arma.",
   "hotkeys.image_menu.name": "Menu Selezione Immagine Mod",
