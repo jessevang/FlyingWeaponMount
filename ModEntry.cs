@@ -573,7 +573,7 @@ public class ModEntry : Mod
             description: i18n.Get("ability.flyingweaponmount.desc"),
             curveKind:"linear",
             new Dictionary<string, object> {
-                { "xpPerLevel", 1000 } 
+                { "xpPerLevel", 500 } 
             },
             maxLevel: 10
         );
