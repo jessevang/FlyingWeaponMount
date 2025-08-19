@@ -632,7 +632,7 @@ public class ModEntry : Mod
         if (gmcm == null)
             return;
 
-        // Register the mod.
+
         gmcm.Register(ModEntry.Instance.ModManifest, () => Config = new ModConfig(), () => ModEntry.Instance.Helper.WriteConfig(Config));
 
         gmcm.AddTextOption(

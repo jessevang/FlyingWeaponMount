@@ -22,7 +22,7 @@ namespace SpinningWeaponAndToolMod
         private enum PreviewState { SelectMod, SelectImage, Preview }
         private static Rectangle backButtonRect = new Rectangle(50, 50, 120, 60);
         private int scrollOffset = 0;
-        private int maxVisibleItems = 10; // How many items can be shown before scrolling
+        private int maxVisibleItems = 10; 
         private const int itemHeight = 40;
         private static readonly Dictionary<string, Texture2D> _cachedTextures = new();
         private ClickableTextureComponent upArrow;
@@ -211,13 +211,13 @@ namespace SpinningWeaponAndToolMod
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
             // 1) Scrollbar UI
-            if (upArrow.containsPoint(x, y)) { /* ...unchanged... */ return; }
-            if (downArrow.containsPoint(x, y)) { /* ...unchanged... */ return; }
+            if (upArrow.containsPoint(x, y)) { return; }
+            if (downArrow.containsPoint(x, y)) {  return; }
             if (scrollBar.containsPoint(x, y)) { scrolling = true; return; }
 
             base.receiveLeftClick(x, y, playSound);
 
-            // 2) BACK BUTTON SHOULD BE ALWAYS CHECKED (independent of list sizes)
+
             if (state != PreviewState.SelectMod && backButtonRect.Contains(x, y))
             {
                 if (state == PreviewState.SelectImage)
@@ -226,26 +226,24 @@ namespace SpinningWeaponAndToolMod
                     state = PreviewState.SelectImage;
 
                 scrollOffset = 0;
-                lastHoveredSourceRect = null;   // optional: clear selection on back
-                return;                         // IMPORTANT: stop processing this click
+                lastHoveredSourceRect = null;   
+                return;                    
             }
 
-            // 3) Safe guard for empty lists (after back handling)
+         
             int total = state == PreviewState.SelectMod ? (modIds?.Count ?? 0)
                                                         : (imagePaths?.Count ?? 0);
             if (total == 0)
                 return;
 
-            // 4) Proceed with your switch (SelectMod / SelectImage / Preview)...
+
             const int yOffset = 100;
             switch (state)
             {
-                // -------------------------
-                // Select Mod
-                // -------------------------
+            
                 case PreviewState.SelectMod:
                     {
-                        // hit test only visible range
+                      
                         int start = scrollOffset;
                         int end = Math.Min(modIds.Count, scrollOffset + maxVisibleItems);
                         for (int i = start; i < end; i++)
@@ -334,9 +332,7 @@ namespace SpinningWeaponAndToolMod
                         break;
                     }
 
-                // -------------------------
-                // Preview → Save selection
-                // -------------------------
+              
                 case PreviewState.Preview:
                     {
                         if (lastHoveredSourceRect is not Rectangle rect)
@@ -369,7 +365,7 @@ namespace SpinningWeaponAndToolMod
                         }
                         else
                         {
-                            // external mod PNG: copy once into our assets for portability
+                           
                             modIdForConfig = selectedMod;
 
                             var srcDir = GetModDir(selectedMod)!;
@@ -394,7 +390,7 @@ namespace SpinningWeaponAndToolMod
                             tilesheetForConfig = $"assets/{newName}";
                         }
 
-                        // Build & persist entry
+                       
                         string itemName = Game1.player.CurrentItem?.DisplayName ?? "Unknown";
                         string itemID = Game1.player.CurrentItem?.ItemId ?? "0";
                         string itemTypeID = Game1.player.CurrentItem?.GetItemTypeId() ?? "W";
@@ -404,8 +400,8 @@ namespace SpinningWeaponAndToolMod
                             ModID = modIdForConfig,
                             ItemName = itemName,
                             itemCategoryAndItemID = itemTypeID + itemID,
-                            tilesheetName = tilesheetForConfig.Replace('\\', '/'),   // normalize
-                            fullPath = copiedFullPath,                               // null for vanilla
+                            tilesheetName = tilesheetForConfig.Replace('\\', '/'),   
+                            fullPath = copiedFullPath,                               
                             SourceRect = rect
                         };
 
@@ -413,7 +409,7 @@ namespace SpinningWeaponAndToolMod
                         Config.weaponSpriteData.Add(newEntry);
                         ModEntry.Instance.Helper.WriteConfig(Config);
 
-                        Game1.activeClickableMenu = null; // Exit
+                        Game1.activeClickableMenu = null; 
                         return;
                     }
             }
@@ -426,7 +422,7 @@ namespace SpinningWeaponAndToolMod
         {
             SpriteText.drawString(b, "Select a Mod:", 200, 50);
 
-            // Clamp scrollOffset safely
+            
             scrollOffset = Math.Max(0, Math.Min(scrollOffset, Math.Max(0, modIds.Count - maxVisibleItems)));
             int start = scrollOffset;
             int end = Math.Min(modIds.Count, scrollOffset + maxVisibleItems);
@@ -444,13 +440,13 @@ namespace SpinningWeaponAndToolMod
         private void DrawScrollBar(SpriteBatch b, int totalItems)
         {
             if (totalItems <= maxVisibleItems)
-                return; // No scrollbar needed
+                return; 
 
-            // Draw arrows
+           
             upArrow.draw(b);
             downArrow.draw(b);
 
-            // Scrollbar background
+            
             IClickableMenu.drawTextureBox(
                 b,
                 Game1.menuTexture,
@@ -462,7 +458,7 @@ namespace SpinningWeaponAndToolMod
                 Color.White
             );
 
-            // Scrollbar thumb position
+           
             float scrollRatio = (float)scrollOffset / Math.Max(1, totalItems - maxVisibleItems);
             int thumbHeight = 40;
             int trackHeight = scrollBarRunner.Height - thumbHeight;
@@ -495,7 +491,7 @@ namespace SpinningWeaponAndToolMod
 
         private void DrawImagePreview(SpriteBatch b)
         {
-            // Calculate scale to fit image in screen
+           
             float scale = Math.Min(
                 (float)(Game1.uiViewport.Width - 200) / texture.Width,
                 (float)(Game1.uiViewport.Height - 200) / texture.Height
@@ -506,10 +502,10 @@ namespace SpinningWeaponAndToolMod
             xPositionOnScreen = (Game1.uiViewport.Width - width) / 2;
             yPositionOnScreen = (Game1.uiViewport.Height - height) / 2;
 
-            // Draw scaled texture
+          
             b.Draw(texture, new Rectangle(xPositionOnScreen, yPositionOnScreen, width, height), Color.White);
 
-            // Draw tile grid
+            
             int tilesX = texture.Width / tileWidth;
             int tilesY = texture.Height / tileHeight;
             for (int x = 0; x < tilesX; x++)
@@ -523,7 +519,7 @@ namespace SpinningWeaponAndToolMod
                 }
             }
 
-            // Draw hover info
+           
             Vector2 mouse = Game1.getMousePosition().ToVector2();
             if (mouse.X >= xPositionOnScreen && mouse.X < xPositionOnScreen + width &&
                 mouse.Y >= yPositionOnScreen && mouse.Y < yPositionOnScreen + height)
