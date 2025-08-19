@@ -3,6 +3,9 @@
   "config.mode.tooltip": "Standalone = Mod works by self and doesn't use UnifiedExperienceSystem for Leveling, UnifiedExperience = If Unified Experience System Mod Exists with this mode, Flying will require the ability leveled up, this mode also overrides config options for the fly speed, and stamina drain based on ability level.",
 
 
+  "Icon.Fly.title":  "Fly on your Weapon",
+  "Icon.Fly.Description":  "Hop on your weapon and fly. Requires Level 1 Flying Weapon Mount.",
+
   "hotkeys.toggle_mount.name": "Toggle Weapon Mount",
   "hotkeys.toggle_mount.tooltip": "Pressing this button will mount or unmount your weapon.",
   "hotkeys.image_menu.name": "Select Modded Image Menu",

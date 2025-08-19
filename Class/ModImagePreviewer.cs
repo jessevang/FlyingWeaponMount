@@ -1,17 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FlyingWeaponMount;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewModdingAPI.Utilities;
 using StardewValley;
-using StardewValley.Menus;
 using StardewValley.BellsAndWhistles;
+using StardewValley.GameData.Pets;
+using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using StardewValley.GameData.Pets;
-using Microsoft.Xna.Framework.Input;
-using FlyingWeaponMount;
 
 namespace SpinningWeaponAndToolMod
 {
@@ -44,12 +45,83 @@ namespace SpinningWeaponAndToolMod
         public static ModConfig Config { get; set; }
         public static ITranslationHelper i18n;
 
+        private const string VanillaId = "@vanilla";
+
+        private static readonly string[] VanillaTileSheetKeys = {
+            "TileSheets/tools",
+            "TileSheets/weapons",
+            "LooseSprites/Concessions",
+            "LooseSprites/Cursors",
+            "LooseSprites/Cursors2",
+            "LooseSprites/DesertRacers",
+            "LooseSprites/AquariumFish",
+            "LooseSprites/birds",
+            "LooseSprites/parrots",
+            "TileSheets/animations",
+            "TileSheets/bobbers",
+            "TileSheets/companions",
+            "TileSheets/Craftables",
+            "TileSheets/critters",
+            "TileSheets/crops",
+            "TileSheets/debris",
+            "TileSheets/FreeCactuses",
+            "TileSheets/joja_furniture",
+            "TileSheets/joja_furnitureFront",
+            "TileSheets/junimo_furniture",
+            "TileSheets/Objects_2",
+            "TileSheets/Projectiles",
+            "TileSheets/retro_furniture",
+            "TileSheets/retro_furnitureFront",
+            "TileSheets/SecretNotesImages",
+            "TileSheets/wizard_furniture",
+            "TileSheets/wizard_furnitureFront",
+            
+
+
+
+        };
+        private static readonly Dictionary<string, List<string>> _pngIndexByModId = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, string> _modDirCache = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Texture2D> _previewTexCache = new(StringComparer.OrdinalIgnoreCase);
+
+
         public static void Open()
         {
-            modIds = ModEntry.Instance.Helper.ModRegistry.GetAll().Select(m => m.Manifest.UniqueID).OrderBy(s => s).ToList();
             state = PreviewState.SelectMod;
-            
             Game1.activeClickableMenu = new ModImagePreviewer(Instance, Config, i18n);
+        }
+
+        private static string? GetModDir(string modId)
+        {
+            if (_modDirCache.TryGetValue(modId, out var cached))
+                return cached;
+
+            var info = ModEntry.Instance.Helper.ModRegistry.Get(modId);
+
+            var dir = info?.GetType().GetProperty("DirectoryPath")?.GetValue(info) as string;
+            if (!string.IsNullOrEmpty(dir))
+                _modDirCache[modId] = dir!;
+            return dir;
+        }
+
+        private static Texture2D GetPreviewTexture(string keyOrFullPath)
+        {
+            if (_previewTexCache.TryGetValue(keyOrFullPath, out var tex))
+                return tex;
+
+            Texture2D loaded;
+            if (!keyOrFullPath.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+            {
+
+                loaded = ModEntry.Instance.Helper.GameContent.Load<Texture2D>(keyOrFullPath.Replace('\\', '/'));
+            }
+            else
+            {
+                using var s = new FileStream(keyOrFullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                loaded = Texture2D.FromStream(Game1.graphics.GraphicsDevice, s);
+            }
+            _previewTexCache[keyOrFullPath] = loaded;
+            return loaded;
         }
 
 
@@ -138,103 +210,133 @@ namespace SpinningWeaponAndToolMod
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
         {
-            // Handle scrollbar input
-            if (upArrow.containsPoint(x, y))
-            {
-                scrollOffset = Math.Max(0, scrollOffset - 1);
-                return;
-            }
-            else if (downArrow.containsPoint(x, y))
-            {
-                int listCount = state == PreviewState.SelectMod ? modIds.Count : imagePaths.Count;
-                scrollOffset = Math.Min(listCount - maxVisibleItems, scrollOffset + 1);
-                return;
-            }
-            else if (scrollBar.containsPoint(x, y))
-            {
-                scrolling = true;
-                return;
-            }
+            // 1) Scrollbar UI
+            if (upArrow.containsPoint(x, y)) { /* ...unchanged... */ return; }
+            if (downArrow.containsPoint(x, y)) { /* ...unchanged... */ return; }
+            if (scrollBar.containsPoint(x, y)) { scrolling = true; return; }
 
             base.receiveLeftClick(x, y, playSound);
-            int yOffset = 100;
 
-            // Handle Back button in any state except SelectMod
+            // 2) BACK BUTTON SHOULD BE ALWAYS CHECKED (independent of list sizes)
             if (state != PreviewState.SelectMod && backButtonRect.Contains(x, y))
             {
                 if (state == PreviewState.SelectImage)
-                {
                     state = PreviewState.SelectMod;
-                    scrollOffset = 0;
-                }
                 else if (state == PreviewState.Preview)
-                {
                     state = PreviewState.SelectImage;
-                    scrollOffset = 0;
-                }
-                return;
+
+                scrollOffset = 0;
+                lastHoveredSourceRect = null;   // optional: clear selection on back
+                return;                         // IMPORTANT: stop processing this click
             }
 
+            // 3) Safe guard for empty lists (after back handling)
+            int total = state == PreviewState.SelectMod ? (modIds?.Count ?? 0)
+                                                        : (imagePaths?.Count ?? 0);
+            if (total == 0)
+                return;
+
+            // 4) Proceed with your switch (SelectMod / SelectImage / Preview)...
+            const int yOffset = 100;
             switch (state)
             {
+                // -------------------------
+                // Select Mod
+                // -------------------------
                 case PreviewState.SelectMod:
-                    int modStart = scrollOffset;
-                    int modEnd = Math.Min(modIds.Count, scrollOffset + maxVisibleItems);
-                    for (int i = modStart; i < modEnd; i++)
                     {
-                        int drawY = yOffset + (i - scrollOffset) * itemHeight;
-                        Rectangle clickable = new Rectangle(200, drawY, 600, 36);
-                        if (clickable.Contains(x, y))
+                        // hit test only visible range
+                        int start = scrollOffset;
+                        int end = Math.Min(modIds.Count, scrollOffset + maxVisibleItems);
+                        for (int i = start; i < end; i++)
                         {
+                            int drawY = yOffset + (i - scrollOffset) * itemHeight;
+                            var clickable = new Rectangle(200, drawY, 600, 36);
+                            if (!clickable.Contains(x, y))
+                                continue;
+
                             selectedMod = modIds[i];
-                            var modInfo = ModEntry.Instance.Helper.ModRegistry.Get(selectedMod);
-                            var dir = modInfo?.GetType().GetProperty("DirectoryPath")?.GetValue(modInfo) as string;
-                            imagePaths = Directory.GetFiles(dir, "*.png", SearchOption.AllDirectories)
-                                .Select(p => Path.GetRelativePath(dir, p).Replace("\\", "/"))
-                                .OrderBy(s => s).ToList();
                             scrollOffset = 0;
+
+                            if (selectedMod == VanillaId)
+                            {
+
+                                imagePaths = VanillaTileSheetKeys.OrderBy(s => s).ToList();
+                                state = PreviewState.SelectImage;
+                                return;
+                            }
+
+
+                            if (!_pngIndexByModId.TryGetValue(selectedMod, out var list))
+                            {
+                                var dir = GetModDir(selectedMod);
+                                if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
+                                {
+                                    imagePaths = new List<string>();
+                                    state = PreviewState.SelectImage;
+                                    return;
+                                }
+
+
+                                list = Directory.EnumerateFiles(dir, "*.png", SearchOption.AllDirectories)
+                                                .Select(p => Path.GetRelativePath(dir, p).Replace('\\', '/'))
+                                                .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
+                                                .ToList();
+                                _pngIndexByModId[selectedMod] = list;
+                            }
+
+                            imagePaths = list;
                             state = PreviewState.SelectImage;
                             return;
                         }
+                        break;
                     }
-                    break;
+
 
                 case PreviewState.SelectImage:
-                    int imgStart = scrollOffset;
-                    int imgEnd = Math.Min(imagePaths.Count, scrollOffset + maxVisibleItems);
-                    for (int i = imgStart; i < imgEnd; i++)
                     {
-                        int drawY = yOffset + (i - scrollOffset) * itemHeight;
-                        Rectangle clickable = new Rectangle(200, drawY, 600, 36);
-                        if (clickable.Contains(x, y))
+                        int start = scrollOffset;
+                        int end = Math.Min(imagePaths.Count, scrollOffset + maxVisibleItems);
+                        for (int i = start; i < end; i++)
                         {
+                            int drawY = yOffset + (i - scrollOffset) * itemHeight;
+                            var clickable = new Rectangle(200, drawY, 600, 36);
+                            if (!clickable.Contains(x, y))
+                                continue;
+
                             selectedImage = imagePaths[i];
+                            scrollOffset = 0;
 
                             try
                             {
-                                var modInfo = ModEntry.Instance.Helper.ModRegistry.Get(selectedMod);
-                                var dir = modInfo?.GetType().GetProperty("DirectoryPath")?.GetValue(modInfo) as string;
-                                string fullImagePath = Path.Combine(dir, selectedImage);
-
-                                using (FileStream stream = new FileStream(fullImagePath, FileMode.Open, FileAccess.Read))
+                                if (selectedMod == VanillaId)
                                 {
-                                    texture = Texture2D.FromStream(Game1.graphics.GraphicsDevice, stream);
+                         
+                                    texture = GetPreviewTexture(selectedImage); 
+                                }
+                                else
+                                {
+                     
+                                    var dir = GetModDir(selectedMod);
+                                    string fullImagePath = Path.Combine(dir!, selectedImage).Replace('/', Path.DirectorySeparatorChar);
+                                    texture = GetPreviewTexture(fullImagePath);
                                 }
 
-                                scrollOffset = 0;
                                 state = PreviewState.Preview;
                             }
                             catch (Exception ex)
                             {
-                                
                                 Game1.addHUDMessage(new HUDMessage(i18n.Get("ModImagePreviewer.Cs-AddHudMessage.FailedToLoadImage") + ex.Message, 3));
-                                ModEntry.Instance.Monitor.Log($"Error loading texture from mod '{selectedMod}': {ex}", LogLevel.Error);
+                                ModEntry.Instance.Monitor.Log($"Error loading preview for '{selectedMod}::{selectedImage}': {ex}", LogLevel.Error);
                             }
                             return;
                         }
+                        break;
                     }
-                    break;
 
+                // -------------------------
+                // Preview → Save selection
+                // -------------------------
                 case PreviewState.Preview:
                     {
                         if (lastHoveredSourceRect is not Rectangle rect)
@@ -242,74 +344,81 @@ namespace SpinningWeaponAndToolMod
                             Game1.addHUDMessage(new HUDMessage(i18n.Get("ModImagePreviewer.Cs-AddHudMessage.NoTileSelected"), HUDMessage.error_type));
                             return;
                         }
-
-                        string selectedModID = selectedMod;
-                        var modInfo = ModEntry.Instance.Helper.ModRegistry.Get(selectedModID);
-                        string sourceModDir = modInfo?.GetType()?.GetProperty("DirectoryPath")?.GetValue(modInfo) as string;
-
+                        var item = Game1.player.CurrentItem;
+                        if (item is null)
+                        {
+                            Game1.addHUDMessage(new HUDMessage(i18n.Get("ModImagePreviewer.Cs-AddHudMessage.NoItem"), HUDMessage.error_type));
+                            return;
+                        }
                         string myModID = ModEntry.Instance.ModManifest.UniqueID;
                         string myModAssets = Path.Combine(ModEntry.Instance.Helper.DirectoryPath, "assets");
 
-                        string copiedPathForConfig;
-                        string? copiedFullPath = null;
                         string? modIdForConfig = null;
+                        string tilesheetForConfig;
+                        string? copiedFullPath = null;
 
-                        if (selectedModID == myModID)
+                        if (selectedMod == VanillaId)
                         {
-                            // From current mod: no copy or rename
-                            copiedPathForConfig = selectedImage;
+     
+                            tilesheetForConfig = selectedImage;       
+                        }
+                        else if (selectedMod == myModID)
+                        {
+                            
+                            tilesheetForConfig = selectedImage;
                         }
                         else
                         {
-                            string filename = Path.GetFileNameWithoutExtension(selectedImage);
-                            string newFilename = $"{filename}.png";
-                            copiedPathForConfig = $"assets/{newFilename}";
-                            copiedFullPath = Path.Combine(myModAssets, newFilename);
-                            modIdForConfig = selectedModID;
+                            // external mod PNG: copy once into our assets for portability
+                            modIdForConfig = selectedMod;
+
+                            var srcDir = GetModDir(selectedMod)!;
+                            string srcFull = Path.Combine(srcDir, selectedImage);
+                            string newName = Path.GetFileNameWithoutExtension(selectedImage) + ".png";
+                            Directory.CreateDirectory(myModAssets);
+                            copiedFullPath = Path.Combine(myModAssets, newName);
 
                             if (!File.Exists(copiedFullPath))
                             {
                                 try
                                 {
-                                    Directory.CreateDirectory(myModAssets);
-                                    string fullSourcePath = Path.Combine(sourceModDir, selectedImage);
-                                    File.Copy(fullSourcePath, copiedFullPath, overwrite: false);
-                                    ModEntry.Instance.Monitor.Log($"Copied {selectedImage} to assets folder as {newFilename}", LogLevel.Info);
+                                    File.Copy(srcFull, copiedFullPath, overwrite: false);
+                                    ModEntry.Instance.Monitor.Log($"Copied '{selectedImage}' → assets/{newName}", LogLevel.Info);
                                 }
                                 catch (Exception ex)
                                 {
-                                    ModEntry.Instance.Monitor.Log($"Failed to copy image from {selectedImage}: {ex}", LogLevel.Error);
+                                    ModEntry.Instance.Monitor.Log($"Failed to copy image '{selectedImage}': {ex}", LogLevel.Error);
                                 }
                             }
+
+                            tilesheetForConfig = $"assets/{newName}";
                         }
 
-                        // Create WeaponSpriteData entry
+                        // Build & persist entry
                         string itemName = Game1.player.CurrentItem?.DisplayName ?? "Unknown";
                         string itemID = Game1.player.CurrentItem?.ItemId ?? "0";
                         string itemTypeID = Game1.player.CurrentItem?.GetItemTypeId() ?? "W";
 
-                        WeaponSpriteData newEntry = new()
+                        var newEntry = new WeaponSpriteData
                         {
                             ModID = modIdForConfig,
                             ItemName = itemName,
                             itemCategoryAndItemID = itemTypeID + itemID,
-                            tilesheetName = copiedPathForConfig,
-                            fullPath = copiedFullPath,
+                            tilesheetName = tilesheetForConfig.Replace('\\', '/'),   // normalize
+                            fullPath = copiedFullPath,                               // null for vanilla
                             SourceRect = rect
                         };
 
-                        // Replace existing entry and write config
                         Config.weaponSpriteData.RemoveAll(w => w.itemCategoryAndItemID == newEntry.itemCategoryAndItemID);
                         Config.weaponSpriteData.Add(newEntry);
                         ModEntry.Instance.Helper.WriteConfig(Config);
 
-                        //Game1.addHUDMessage(new HUDMessage(i18n.Get("ModImagePreviewer.Cs-AddHudMessage.SpriteSaved"), HUDMessage.newQuest_type));
-                        Game1.activeClickableMenu = null; // Exit the menu
+                        Game1.activeClickableMenu = null; // Exit
                         return;
                     }
-
             }
         }
+
 
 
 
@@ -448,6 +557,7 @@ namespace SpinningWeaponAndToolMod
                 .Select(m => m.Manifest.UniqueID)
                 .OrderBy(id => id)
                 .ToList();
+            modIds.Insert(0, VanillaId);
         }
 
 
