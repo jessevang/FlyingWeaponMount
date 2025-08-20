@@ -14,6 +14,7 @@ using StardewValley.Objects;
 using StardewValley.Tools;
 using System;
 using System.Globalization;
+using static StardewValley.Minigames.BoatJourney;
 
 
 namespace FlyingWeaponMount
@@ -415,13 +416,25 @@ public class ModEntry : Mod
             return;
 
 
-        if (currentMode != MovementMode.FlyingWeapon)
+        bool inEvent = Game1.eventUp
+            || Game1.CurrentEvent != null
+            || Game1.currentLocation?.currentEvent != null
+            || Game1.fadeToBlack;
+
+        if (inEvent)
         {
+            if (currentMode == MovementMode.FlyingWeapon)
+            {
+                stopSwordFlyingAndReset();
+                currentMode = MovementMode.Run;
+              
+            }
             return;
         }
-        if (Game1.currentLocation.currentEvent != null || Game1.eventUp || Game1.fadeToBlack)
-            return; // Don't update flying or camera right now
 
+       
+        if (currentMode != MovementMode.FlyingWeapon)
+            return;
 
         if (Game1.player.CurrentItem is not MeleeWeapon)
         {
@@ -437,7 +450,7 @@ public class ModEntry : Mod
             return;
         }
 
-        if (Game1.activeClickableMenu != null)  //Need to test to not fly around when menu is open, need to do the same
+        if (Game1.activeClickableMenu != null) 
         {
 
         }
@@ -453,21 +466,31 @@ public class ModEntry : Mod
         // Hover effect using sine wave
         Game1.player.Halt();
         hoverTick++;
-        hoverOffset = Config.HoverHeightOffGround + (float)Math.Sin(hoverTick / 10f) * 4f; //sets hover height, adjust first number for height
+        hoverOffset = Config.HoverHeightOffGround + (float)Math.Sin(hoverTick / 10f) * 4f; 
         SnapCameraToPlayer();
 
 
 
         if (e.IsMultipleOf(6))
         {
-            float currentEnergy = uesApi.GetCurrentEnergy();
-            if ((Game1.player.Stamina <= 0 && this.Config.AbilityCostType.Equals("Stamina"))|| (this.Config.AbilityCostType.Equals("Energy") && (currentEnergy <= ResourceDrain)))
+            float currentEnergy = (uesApi != null) ? uesApi.GetCurrentEnergy() : 0f;
+
+
+            if (Game1.player.Stamina <= 0 && this.Config.AbilityCostType.Equals("Stamina"))
             {
                 currentMode = MovementMode.Run;
                 stopSwordFlyingAndReset() ; 
                 Game1.addHUDMessage(new HUDMessage(i18n.Get("HUDMessage-TooExhausted"), HUDMessage.error_type));
                 return;
 
+            }
+
+            if (this.Config.AbilityCostType.Equals("Energy") && (currentEnergy <= ResourceDrain))
+            {
+                currentMode = MovementMode.Run;
+                stopSwordFlyingAndReset();
+                Game1.addHUDMessage(new HUDMessage(i18n.Get("HUDMessage-TooExhausted"), HUDMessage.error_type));
+                return;
             }
 
 
@@ -531,11 +554,11 @@ public class ModEntry : Mod
         }
 
         sourceRect = match.SourceRect;
-        if (FacingDirection == -MathF.PI / 4f) // mean person is facing upward upward then change height of images
+        if (FacingDirection == -MathF.PI / 4f) 
         {
             sourceRect = new Rectangle(sourceRect.X, sourceRect.Y, 16, 16);
         }
-        else if (FacingDirection == -5 * MathF.PI / 4f) // mean person is facing downwards then change height of images
+        else if (FacingDirection == -5 * MathF.PI / 4f) 
         {
             sourceRect = new Rectangle(sourceRect.X, sourceRect.Y, 16, 16);
         }
@@ -554,7 +577,7 @@ public class ModEntry : Mod
             weaponTex,
             drawPos,
             sourceRect,
-            weaponColor, //white with some transparency
+            weaponColor, 
             angle,
             new Vector2(0f, sourceRect.Height),
             6f,
@@ -563,7 +586,7 @@ public class ModEntry : Mod
         );
 
         Game1.player.FarmerSprite.StopAnimation();
-        Game1.player.yOffset = -hoverOffset + Config.FarmerHoverAboveWeapon;//keep farmer higher than sword update the last number to adjust height
+        Game1.player.yOffset = -hoverOffset + Config.FarmerHoverAboveWeapon;
     }
 
 
