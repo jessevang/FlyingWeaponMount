@@ -21,6 +21,7 @@ namespace FlyingWeaponMount
     public class ModConfig
     {
         public string Mode { get; set; } = "UnifiedExperience";
+        public string AbilityCostType { get; set; } = "Energy";
 
         public KeybindList WeaponFlyModeOnOffToggleHotkey { get; set; } = new(
             new Keybind(SButton.LeftShift),
@@ -176,6 +177,12 @@ public class ModEntry : Mod
     private Vector2? initialCameraOffset = null;
     private Vector2? playerCenter = null;
     private UnifiedExperienceSystem.IUnifiedExperienceAPI? uesApi;
+
+    private float ResourceDrain;
+    private float SpeedMultiplier;
+
+
+    bool successfulRemovedEnergy;
     public override void Entry(IModHelper helper)
     {
         Instance = this;
@@ -225,7 +232,7 @@ public class ModEntry : Mod
             if (!Context.IsPlayerFree || Game1.player == null)
                 return;
 
-
+            ResourceDrain = Config.StaminaDrainPerTenthSecond;
             if (Config.Mode.Equals("UnifiedExperience"))
             {
                 if (uesApi == null)
@@ -235,9 +242,9 @@ public class ModEntry : Mod
 
                 int level = uesApi.GetAbilityLevel(this.ModManifest.UniqueID, "FlyingWeaponMount");
                 if (level <= 0) return;
-
-                Config.StaminaDrainPerTenthSecond = 0.2f - (0.02f * level);
-                Config.MovementSpeedMultiplier = 1.5f + (0.15f * level);
+                
+                ResourceDrain  = Config.StaminaDrainPerTenthSecond - ((Config.StaminaDrainPerTenthSecond*.1f) * level);
+                SpeedMultiplier  = Config.MovementSpeedMultiplier + (0.15f * level);
 
 
                 //Monitor.Log($"[UES] FlyingWeaponMount scaled: Level {level}, " + $"StaminaDrain={Config.StaminaDrainPerTenthSecond}, Speed={Config.MovementSpeedMultiplier}", LogLevel.Debug);
@@ -245,9 +252,6 @@ public class ModEntry : Mod
 
 
             }
-
-
-
 
 
 
@@ -310,7 +314,7 @@ public class ModEntry : Mod
 
     private void UpdateFacingFromInput()
     {
-        float speed = Game1.player.getMovementSpeed() * Config.MovementSpeedMultiplier;
+        float speed = Game1.player.getMovementSpeed() * SpeedMultiplier;
         float dt = (float)Game1.currentGameTime.ElapsedGameTime.TotalMilliseconds / 16.67f;
 
 
@@ -456,8 +460,8 @@ public class ModEntry : Mod
 
         if (e.IsMultipleOf(6))
         {
-
-            if (Game1.player.Stamina <= 0)
+            float currentEnergy = uesApi.GetCurrentEnergy();
+            if ((Game1.player.Stamina <= 0 && this.Config.AbilityCostType.Equals("Stamina"))|| (this.Config.AbilityCostType.Equals("Energy") && (currentEnergy <= ResourceDrain)))
             {
                 currentMode = MovementMode.Run;
                 stopSwordFlyingAndReset() ; 
@@ -466,10 +470,20 @@ public class ModEntry : Mod
 
             }
 
+
             if (isWeaponFlying)
             {
-                Game1.player.Stamina = Math.Max(0, Game1.player.Stamina - Config.StaminaDrainPerTenthSecond);
+                if (this.Config.AbilityCostType.Equals("Stamina"))
+                {
+                    Game1.player.Stamina = Math.Max(0, Game1.player.Stamina - ResourceDrain);
+                }
+                if (this.Config.AbilityCostType.Equals("Energy"))
+                {
+                    successfulRemovedEnergy = uesApi.TryToUseAbility(ResourceDrain);
+                }
+
                 isWeaponFlying = false;
+
             }
 
         }
@@ -643,9 +657,21 @@ public class ModEntry : Mod
             setValue: value => Config.Mode = value,
             allowedValues: new[] { "Standalone", "UnifiedExperience" }
         );
-        
-       
-        gmcm.AddKeybindList(
+
+        gmcm.AddTextOption(
+             mod: ModManifest,
+             name: () => "Ability Cost",
+             tooltip: () => i18n.Get("Default is set to Energy for UnifiedExperience Mode, but should be set to Stamina if your using Standalone Mode"),
+             getValue: () => Config.AbilityCostType,
+             setValue: value => Config.AbilityCostType = value,
+             allowedValues: new[] { "Energy", "Stamina" }
+         );
+
+
+
+ 
+
+    gmcm.AddKeybindList(
            mod: ModManifest,
            name: () => i18n.Get("hotkeys.toggle_mount.name"),
            tooltip: () => i18n.Get("hotkeys.toggle_mount.tooltip"),
