@@ -234,6 +234,7 @@ public class ModEntry : Mod
                 return;
 
             ResourceDrain = Config.StaminaDrainPerTenthSecond;
+            SpeedMultiplier = Config.MovementSpeedMultiplier;
             if (Config.Mode.Equals("UnifiedExperience"))
             {
                 if (uesApi == null)
@@ -418,8 +419,8 @@ public class ModEntry : Mod
 
         bool inEvent = Game1.eventUp
             || Game1.CurrentEvent != null
-            || Game1.currentLocation?.currentEvent != null
-            || Game1.fadeToBlack;
+            || Game1.currentLocation?.currentEvent != null;
+
 
         if (inEvent)
         {
@@ -604,13 +605,18 @@ public class ModEntry : Mod
     {
 
         registerGMCM();
+
+
         registerUES();
+        
         registerIconicFramework();
 
 
 
 
     }
+    
+    
     private void registerIconicFramework()
     {
         var iconicFramework = Helper.ModRegistry.GetApi<IIconicFrameworkApi>("furyx639.ToolbarIcons");
@@ -630,6 +636,7 @@ public class ModEntry : Mod
             getDescription: () => I18n.Get("Icon.Fly.Description"),
             onClick: () => Fly(true)
         );
+        
 
 
 
@@ -649,16 +656,22 @@ public class ModEntry : Mod
         }
 
 
-        uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
-            abilityId: "FlyingWeaponMount",
-            displayName: i18n.Get("ability.flyingweaponmount.name"),
-            description: i18n.Get("ability.flyingweaponmount.desc"),
-            curveKind:"linear",
-            new Dictionary<string, object> {
-                { "xpPerLevel", 500 } 
-            },
-            maxLevel: 10
-        );
+
+        //If mode is Unified Experience loads API for energy usage, but doesn't register Ability for leveling
+        if (Config.Mode.Equals("UnifiedExperience"))
+        {
+
+                uesApi.RegisterAbility(modUniqueId: this.ModManifest.UniqueID,
+                abilityId: "FlyingWeaponMount",
+                displayName: i18n.Get("ability.flyingweaponmount.name"),
+                description: i18n.Get("ability.flyingweaponmount.desc"),
+                curveKind: "linear",
+                new Dictionary<string, object> {
+                    { "xpPerLevel", 500 }
+                },
+                maxLevel: 10
+            );
+        }
 
         
     }
@@ -681,10 +694,11 @@ public class ModEntry : Mod
             allowedValues: new[] { "Standalone", "UnifiedExperience" }
         );
 
+
         gmcm.AddTextOption(
              mod: ModManifest,
-             name: () => "Ability Cost",
-             tooltip: () => i18n.Get("Default is set to Energy for UnifiedExperience Mode, but should be set to Stamina if your using Standalone Mode"),
+             name: () => i18n.Get("config.abilityCost.name"),
+             tooltip: () => i18n.Get("config.abilityCost.tooltip"),
              getValue: () => Config.AbilityCostType,
              setValue: value => Config.AbilityCostType = value,
              allowedValues: new[] { "Energy", "Stamina" }

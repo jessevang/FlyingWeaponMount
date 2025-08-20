@@ -1,6 +1,9 @@
 {
   "config.mode.name": "游戏模式",
   "config.mode.tooltip": "Standalone = 模组独立运行，不使用 UnifiedExperienceSystem 来升级。UnifiedExperience = 如果存在 Unified Experience System 模组并使用该模式，飞行将需要解锁相应技能；此模式还会根据技能等级覆盖飞行速度和体力消耗的配置选项。",
+  "config.abilityCost.name": "技能消耗",
+  "config.abilityCost.tooltip": "默认在 UnifiedExperience 模式下使用 Energy；Standalone 模式请使用 Stamina。",
+
   "Icon.Fly.title": "骑武器飞行",
   "Icon.Fly.Description": "骑在你的武器上飞行。需要 1 级飞行武器坐骑。",
   "hotkeys.toggle_mount.name": "切换武器骑乘",

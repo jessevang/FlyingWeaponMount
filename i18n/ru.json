@@ -1,6 +1,9 @@
 {
   "config.mode.name": "Режим игры",
   "config.mode.tooltip": "Standalone = Мод работает самостоятельно и не использует UnifiedExperienceSystem для прокачки. UnifiedExperience = Если установлен мод Unified Experience System в этом режиме, полёт потребует прокачанной способности; также этот режим переопределяет параметры конфигурации для скорости полёта и расхода выносливости в зависимости от уровня способности.",
+  "config.abilityCost.name": "Стоимость способности",
+  "config.abilityCost.tooltip": "По умолчанию в режиме UnifiedExperience используется Energy. В режиме Standalone используйте Stamina.",
+
   "Icon.Fly.title": "Летать на оружии",
   "Icon.Fly.Description": "Садитесь на оружие и летайте. Требуется уровень 1 Навык Летающее Оружие.",
   "hotkeys.toggle_mount.name": "Вкл/Выкл Полёт на Оружии",

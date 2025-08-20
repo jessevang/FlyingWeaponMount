@@ -1,6 +1,9 @@
 {
   "config.mode.name": "Modo de Jogo",
   "config.mode.tooltip": "Standalone = O mod funciona sozinho e não usa o UnifiedExperienceSystem para progressão. UnifiedExperience = Se o mod Unified Experience System existir com este modo, voar exigirá que a habilidade esteja evoluída; este modo também substitui as opções de configuração para velocidade de voo e consumo de energia com base no nível da habilidade.",
+  "config.abilityCost.name": "Custo da habilidade",
+  "config.abilityCost.tooltip": "O padrão é Energy no modo UnifiedExperience. Use Stamina no modo Standalone.",
+
   "Icon.Fly.title": "Voar na sua Arma",
   "Icon.Fly.Description": "Suba em sua arma e voe. Requer Nível 1 Montaria de Arma Voadora.",
   "hotkeys.toggle_mount.name": "Alternar Montaria de Arma",

@@ -1,6 +1,9 @@
 {
   "config.mode.name": "Modalità di gioco",
   "config.mode.tooltip": "Standalone = La mod funziona da sola e non utilizza UnifiedExperienceSystem per il livello. UnifiedExperience = Se la mod Unified Experience System esiste con questa modalità, il volo richiederà l'abilità sbloccata; questa modalità sovrascrive anche le opzioni di configurazione per la velocità di volo e il consumo di stamina in base al livello dell'abilità.",
+  "config.abilityCost.name": "Costo abilità",
+  "config.abilityCost.tooltip": "L'impostazione predefinita è Energy per la modalità UnifiedExperience. Usa Stamina per la modalità Standalone.",
+
   "Icon.Fly.title": "Vola sulla tua arma",
   "Icon.Fly.Description": "Sali sulla tua arma e vola. Richiede livello 1 Monta Arma Volante.",
   "hotkeys.toggle_mount.name": "Attiva/Disattiva Cavalcatura Arma",

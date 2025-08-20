@@ -1,6 +1,10 @@
 {
   "config.mode.name": "게임 모드",
   "config.mode.tooltip": "Standalone = 모드가 단독으로 작동하며 레벨링에 UnifiedExperienceSystem을 사용하지 않습니다. UnifiedExperience = Unified Experience System 모드가 있을 경우 이 모드에서는 비행에 능력 레벨이 필요하며, 이 모드는 능력 레벨에 따라 비행 속도와 스태미너 소모에 대한 설정 옵션을 덮어씁니다.",
+  "config.abilityCost.name": "능력 비용",
+  "config.abilityCost.tooltip": "기본값은 UnifiedExperience 모드에서 Energy입니다. Standalone 모드에서는 Stamina를 사용하세요.",
+
+
   "Icon.Fly.title": "무기에 올라타서 비행",
   "Icon.Fly.Description": "무기에 올라타 날아갑니다. 비행 무기 탑승 1레벨 필요.",
   "hotkeys.toggle_mount.name": "무기 탑승 전환",
