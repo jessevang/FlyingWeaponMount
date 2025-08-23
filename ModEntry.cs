@@ -669,9 +669,13 @@ public class ModEntry : Mod
                 new Dictionary<string, object> {
                     { "xpPerLevel", 500 }
                 },
-                maxLevel: 10
+                maxLevel: 10,
+                iconPath: "LooseSprites/Cursors",
+                iconSourceRect: new Rectangle(130, 207, 14, 16) 
             );
         }
+
+
 
         
     }

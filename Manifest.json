@@ -1,7 +1,7 @@
 {
   "Name": "FlyingWeaponMount",
   "Author": "Darkmushu1",
-  "Version": "1.0.7",
+  "Version": "1.0.8",
   "Description": "Walking, Running, naw, lets go with Flying Weapons",
   "UniqueID": "Darkmushu1.FlyingWeaponMount",
   "EntryDll": "FlyingWeaponMount.dll",
@@ -15,7 +15,7 @@
     {
       "UniqueID": "Darkmushu1.UnifiedExperienceSystem",
       "IsRequired": false,
-      "MinimumVersion": "1.1.3"
+      "MinimumVersion": "1.1.4"
     },
 
     {
