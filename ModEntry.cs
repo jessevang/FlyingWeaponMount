@@ -327,17 +327,7 @@ public class ModEntry : Mod
             weaponColor = Config.weaponColorUp;
 
             Vector2 move = new Vector2(0f, -(speed * dt));
-            Vector2 newPos = Game1.player.position.Get() + move;
-
-            Rectangle hitbox = Game1.player.GetBoundingBox();
-            hitbox.Offset(0, (int)move.Y);
-
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player)|| Config.FlyAnywhere == true)
-            {
-                isWeaponFlying = true;
-    
-                Game1.player.position.Set(newPos);
-            }
+            isWeaponFlying = MoveWithCollision(move, Config.FlyAnywhere);
         }
         else if (Helper.Input.IsDown(SButton.D) || Helper.Input.IsDown(SButton.LeftThumbstickRight))  // RIGHT
         {
@@ -346,18 +336,7 @@ public class ModEntry : Mod
             weaponColor = Config.weaponColorRight;
 
             Vector2 move = new Vector2(speed * dt, 0f);
-            Vector2 newPos = Game1.player.position.Get() + move;
-
-            Rectangle hitbox = Game1.player.GetBoundingBox();
-            hitbox.Offset((int)move.X, 0);
-
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player) || Config.FlyAnywhere == true)
-            {
-
-                isWeaponFlying = true;
-
-                Game1.player.position.Set(newPos);
-            }
+            isWeaponFlying = MoveWithCollision(move, Config.FlyAnywhere);
         }
         else if (Helper.Input.IsDown(SButton.S) || Helper.Input.IsDown(SButton.LeftThumbstickDown))  // DOWN
         {
@@ -366,18 +345,7 @@ public class ModEntry : Mod
 
             weaponColor = Config.weaponColorDown;
             Vector2 move = new Vector2(0f, speed * dt);
-            Vector2 newPos = Game1.player.position.Get() + move;
-
-            Rectangle hitbox = Game1.player.GetBoundingBox();
-            hitbox.Offset(0, (int)move.Y);
-
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player) || Config.FlyAnywhere == true)
-            {
-
-                isWeaponFlying = true;
-
-                Game1.player.position.Set(newPos);
-            }
+            isWeaponFlying = MoveWithCollision(move, Config.FlyAnywhere);
         }
         else if (Helper.Input.IsDown(SButton.A) || Helper.Input.IsDown(SButton.LeftThumbstickLeft))  // LEFT
         {
@@ -386,18 +354,7 @@ public class ModEntry : Mod
             weaponColor = Config.weaponColorLeft;
 
             Vector2 move = new Vector2(-(speed * dt), 0f);
-            Vector2 newPos = Game1.player.position.Get() + move;
-
-            Rectangle hitbox = Game1.player.GetBoundingBox();
-            hitbox.Offset((int)move.X, 0);
-
-            if (!Game1.currentLocation.isCollidingPosition(hitbox, Game1.viewport, true, 0, false, Game1.player) || Config.FlyAnywhere == true)
-            {
-                isWeaponFlying = true;
-
-                Game1.player.position.Set(newPos);
-
-            }
+            isWeaponFlying = MoveWithCollision(move, Config.FlyAnywhere);
         }
 
     }
@@ -597,6 +554,61 @@ public class ModEntry : Mod
                Helper.Input.IsDown(SButton.S) || Helper.Input.IsDown(SButton.D) ||
                Helper.Input.IsDown(SButton.Up) || Helper.Input.IsDown(SButton.Down) ||
                Helper.Input.IsDown(SButton.Left) || Helper.Input.IsDown(SButton.Right);
+    }
+
+
+
+    private bool MoveWithCollision(Vector2 desiredDelta, bool bypass = false)
+    {
+        if (desiredDelta == Vector2.Zero)
+            return false;
+
+        if (bypass)
+        {
+            Game1.player.position.Set(Game1.player.position.Get() + desiredDelta);
+            return true;
+        }
+
+        const float step = 1f;
+        bool moved = false;
+
+        // X axis
+        float remainingX = desiredDelta.X;
+        while (Math.Abs(remainingX) > 0f)
+        {
+            float dx = Math.Sign(remainingX) * Math.Min(step, Math.Abs(remainingX));
+            Rectangle cur = Game1.player.GetBoundingBox();
+            Rectangle fut = new Rectangle((int)Math.Round(cur.X + dx), cur.Y, cur.Width, cur.Height);
+            Rectangle swept = Rectangle.Union(cur, fut);
+
+            if (!Game1.currentLocation.isCollidingPosition(swept, Game1.viewport, true, 0, false, Game1.player))
+            {
+                Game1.player.position.Set(new Vector2(Game1.player.position.X + dx, Game1.player.position.Y));
+                remainingX -= dx;
+                moved = true;
+            }
+            else break;
+        }
+
+        // Y axis
+        float remainingY = desiredDelta.Y;
+        while (Math.Abs(remainingY) > 0f)
+        {
+            float dy = Math.Sign(remainingY) * Math.Min(step, Math.Abs(remainingY));
+            Rectangle cur = Game1.player.GetBoundingBox();
+            Rectangle fut = new Rectangle(cur.X, (int)Math.Round(cur.Y + dy), cur.Width, cur.Height);
+            Rectangle swept = Rectangle.Union(cur, fut);
+
+            if (!Game1.currentLocation.isCollidingPosition(swept, Game1.viewport, true, 0, false, Game1.player))
+            {
+                Game1.player.position.Set(new Vector2(Game1.player.position.X, Game1.player.position.Y + dy));
+                remainingY -= dy;
+                moved = true;
+            }
+            else break;
+        }
+
+        return moved;
     }
 
 
